@@ -1,0 +1,964 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Quick Mental Maths · Rajashree Rakesh Agrawal</title>
+<meta name="description" content="A daily mental-arithmetic drill for the case room — ten timed problems with the shortcut shown after every answer. Built by Rajashree Rakesh Agrawal." />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,900&family=Spectral:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+
+<style>
+  :root {
+    --bg: #ece4d6;
+    --paper: #f6f1e7;
+    --paper-2: #fbf7ee;
+    --ink: #221d16;
+    --muted: #837766;
+    --line: #d8cdba;
+    --clay: #bb4d2c;
+    --clay-soft: #e8c9bd;
+    --teal: #2f6f63;
+    --teal-soft: #cfe0da;
+    --gold: #b08529;
+    --shadow: 24px 28px 60px -34px rgba(40,28,12,.45);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Spectral', Georgia, serif;
+    color: var(--ink);
+    background:
+      radial-gradient(120% 90% at 12% -5%, #f3ecdf 0%, transparent 55%),
+      radial-gradient(100% 80% at 105% 110%, #e4dac6 0%, transparent 60%),
+      var(--bg);
+    min-height: 100vh;
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    padding: 28px 16px 60px;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .stage {
+    width: 100%;
+    max-width: 600px;
+    position: relative;
+  }
+
+  /* subtle grain */
+  .stage::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    opacity: .04;
+    z-index: 50;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+
+  .card {
+    background: var(--paper);
+    border: 1px solid var(--line);
+    border-radius: 18px;
+    box-shadow: var(--shadow);
+    padding: 30px 28px 32px;
+    position: relative;
+    overflow: hidden;
+  }
+  .card::after {
+    content: "";
+    position: absolute; left: 0; top: 0; bottom: 0; width: 5px;
+    background: linear-gradient(var(--clay), var(--gold));
+  }
+
+  .eyebrow {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    letter-spacing: .28em;
+    text-transform: uppercase;
+    color: var(--clay);
+    font-weight: 600;
+  }
+
+  h1 {
+    font-family: 'Fraunces', serif;
+    font-weight: 900;
+    font-size: clamp(34px, 9vw, 52px);
+    line-height: .98;
+    letter-spacing: -.01em;
+    margin: 10px 0 8px;
+  }
+  h1 em { font-style: italic; color: var(--clay); font-weight: 600; }
+
+  .lede { color: var(--muted); font-size: 17px; max-width: 42ch; }
+
+  /* ---- stat strip ---- */
+  .stats {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 10px;
+    margin: 26px 0 22px;
+  }
+  .stat {
+    background: var(--paper-2);
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    padding: 12px 10px 11px;
+    text-align: center;
+  }
+  .stat .v {
+    font-family: 'Fraunces', serif;
+    font-weight: 600;
+    font-size: 26px;
+    line-height: 1;
+  }
+  .stat .v small { font-size: 14px; color: var(--muted); }
+  .stat .k {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 9.5px;
+    letter-spacing: .14em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-top: 6px;
+  }
+  .stat.flame .v { color: var(--clay); }
+
+  .label {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    letter-spacing: .16em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin: 4px 0 10px;
+  }
+
+  /* ---- segmented difficulty ---- */
+  .seg {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    overflow: hidden;
+    background: var(--paper-2);
+  }
+  .seg button {
+    appearance: none;
+    border: none;
+    background: transparent;
+    padding: 13px 8px;
+    cursor: pointer;
+    font-family: 'Spectral', serif;
+    color: var(--muted);
+    border-right: 1px solid var(--line);
+    transition: background .18s, color .18s;
+    text-align: center;
+  }
+  .seg button:last-child { border-right: none; }
+  .seg button .t { display: block; font-size: 16px; font-weight: 600; color: var(--ink); }
+  .seg button .d { display: block; font-size: 11px; margin-top: 2px; }
+  .seg button[aria-pressed="true"] { background: var(--ink); }
+  .seg button[aria-pressed="true"] .t,
+  .seg button[aria-pressed="true"] .d { color: var(--paper); }
+  .seg button[aria-pressed="true"] .t { color: #f4d9c0; }
+
+  /* ---- buttons ---- */
+  .btn {
+    appearance: none; border: none; cursor: pointer;
+    font-family: 'IBM Plex Mono', monospace;
+    font-weight: 600; font-size: 13px;
+    letter-spacing: .12em; text-transform: uppercase;
+    border-radius: 12px;
+    padding: 16px 22px;
+    transition: transform .12s, box-shadow .2s, background .2s;
+  }
+  .btn-primary {
+    background: var(--clay); color: #fff;
+    width: 100%; margin-top: 22px;
+    box-shadow: 0 14px 24px -14px var(--clay);
+  }
+  .btn-primary:hover { transform: translateY(-2px); }
+  .btn-primary:active { transform: translateY(0); }
+  .btn-ghost {
+    background: transparent; color: var(--ink);
+    border: 1px solid var(--line);
+  }
+  .btn-ghost:hover { background: var(--paper-2); }
+
+  /* ---- drill ---- */
+  .drill-top {
+    display: flex; align-items: center; justify-content: space-between;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 12px; color: var(--muted);
+    border-bottom: 1px solid var(--line);
+    padding-bottom: 14px; margin-bottom: 6px;
+  }
+  .drill-top .timer { font-size: 16px; color: var(--ink); font-weight: 600; }
+  .dots { display: flex; gap: 6px; align-items: center; }
+  .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--line); }
+  .dot.done { background: var(--teal); }
+  .dot.wrong { background: var(--clay); }
+  .dot.cur { background: var(--ink); transform: scale(1.35); }
+
+  .cat-tag {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10.5px; letter-spacing: .18em; text-transform: uppercase;
+    color: var(--clay); margin: 22px 0 12px;
+  }
+  .question {
+    font-family: 'Fraunces', serif;
+    font-weight: 600;
+    font-size: clamp(24px, 6.4vw, 33px);
+    line-height: 1.2;
+    min-height: 2.2em;
+  }
+
+  .answer-row { display: flex; gap: 10px; margin-top: 22px; }
+  .answer-row input {
+    flex: 1;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 24px;
+    padding: 14px 16px;
+    border: 1.5px solid var(--line);
+    border-radius: 12px;
+    background: var(--paper-2);
+    color: var(--ink);
+    outline: none;
+    transition: border-color .15s;
+  }
+  .answer-row input:focus { border-color: var(--clay); }
+  .answer-row .btn { padding: 0 22px; }
+
+  .reveal-link {
+    margin-top: 14px;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 12px;
+    color: var(--muted);
+    background: none; border: none; cursor: pointer;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+  .reveal-link:hover { color: var(--clay); }
+
+  /* feedback */
+  .feedback {
+    margin-top: 22px;
+    border-radius: 14px;
+    padding: 18px 18px 19px;
+    border: 1px solid var(--line);
+    animation: rise .3s ease both;
+  }
+  .feedback.right { background: var(--teal-soft); border-color: #aecbc2; }
+  .feedback.wrong { background: var(--clay-soft); border-color: #ddb4a4; }
+  .fb-head {
+    display: flex; align-items: baseline; justify-content: space-between;
+    font-family: 'IBM Plex Mono', monospace; font-size: 12px;
+    letter-spacing: .1em; text-transform: uppercase;
+  }
+  .feedback.right .fb-head { color: var(--teal); }
+  .feedback.wrong .fb-head { color: var(--clay); }
+  .fb-ans {
+    font-family: 'Fraunces', serif; font-weight: 600;
+    font-size: 22px; margin: 8px 0 4px;
+  }
+  .fb-ans .you { color: var(--muted); font-size: 15px; font-weight: 400; }
+  .fb-tech {
+    font-size: 15.5px; line-height: 1.5; color: #4a4135; margin-top: 8px;
+    border-top: 1px dashed rgba(0,0,0,.14); padding-top: 10px;
+  }
+  .fb-tech b { font-family:'IBM Plex Mono',monospace; font-weight:600; font-size:11px; letter-spacing:.12em; text-transform:uppercase; color: var(--ink); display:block; margin-bottom:4px; }
+
+  /* summary */
+  .sum-score {
+    font-family: 'Fraunces', serif; font-weight: 900;
+    font-size: 72px; line-height: 1; text-align: center; margin: 6px 0;
+  }
+  .sum-score small { font-size: 30px; color: var(--muted); font-weight: 600; }
+  .sum-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 22px 0; }
+  .sum-cell {
+    background: var(--paper-2); border: 1px solid var(--line);
+    border-radius: 12px; padding: 16px; text-align: center;
+  }
+  .sum-cell .v { font-family:'Fraunces',serif; font-weight:600; font-size: 28px; }
+  .sum-cell .k { font-family:'IBM Plex Mono',monospace; font-size:10px; letter-spacing:.14em; text-transform:uppercase; color: var(--muted); margin-top: 6px; }
+  .streak-note {
+    background: var(--ink); color: var(--paper);
+    border-radius: 12px; padding: 16px 18px; text-align:center;
+    font-size: 16px;
+  }
+  .streak-note b { color: #f4d9c0; font-family:'Fraunces',serif; }
+  .sum-actions { display:grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 20px; }
+  .sum-actions .btn { margin-top: 0; }
+
+  .tip {
+    margin-top: 18px; font-size: 13.5px; color: var(--muted);
+    line-height: 1.5; border-top: 1px solid var(--line); padding-top: 14px;
+  }
+
+  /* ---- section header (back nav) ---- */
+  .sec-head { display:flex; align-items:center; gap:12px; }
+  .back-btn {
+    appearance:none; border:1px solid var(--line); background: var(--paper-2);
+    border-radius: 10px; width: 40px; height: 40px; cursor: pointer; flex:none;
+    font-size: 19px; color: var(--ink); line-height: 1; transition: background .15s;
+  }
+  .back-btn:hover { background: var(--bg); }
+
+  /* ---- history list ---- */
+  .hist-list { display:flex; flex-direction:column; gap: 10px; margin-top: 18px; }
+  .hist-row {
+    width:100%; text-align:left; cursor:pointer;
+    background: var(--paper-2); border:1px solid var(--line); border-radius: 12px;
+    padding: 14px 16px; display:flex; align-items:center; gap: 14px;
+    font-family:'Spectral',serif; transition: transform .12s, border-color .15s;
+  }
+  .hist-row:hover { border-color: var(--clay); transform: translateX(2px); }
+  .hist-score { font-family:'Fraunces',serif; font-weight:600; font-size: 23px; flex:none; width: 60px; }
+  .hist-score small { font-size: 13px; color: var(--muted); }
+  .hist-meta { flex:1; min-width:0; }
+  .hist-when { font-size: 16px; font-weight: 600; }
+  .hist-sub { font-family:'IBM Plex Mono',monospace; font-size: 11px; letter-spacing:.07em; color: var(--muted); text-transform: uppercase; margin-top: 3px; }
+  .lvl-pill { display:inline-block; padding: 1px 7px; border-radius: 6px; font-size: 10px; background: var(--clay-soft); color: var(--clay); margin-right: 7px; }
+  .hist-arrow { color: var(--muted); font-size: 18px; flex:none; }
+  .empty { text-align:center; color: var(--muted); padding: 46px 10px; font-size: 16px; line-height:1.55; }
+
+  /* ---- review detail ---- */
+  .rev-summary {
+    background: var(--paper-2); border:1px solid var(--line); border-radius:12px;
+    padding: 14px 16px; margin: 18px 0 4px; display:flex; gap: 22px; flex-wrap:wrap;
+    font-family:'IBM Plex Mono',monospace; font-size: 11px; color: var(--muted);
+    text-transform: uppercase; letter-spacing:.08em;
+  }
+  .rev-summary b { font-family:'Fraunces',serif; font-size: 19px; color: var(--ink); display:block; text-transform:none; letter-spacing:0; margin-bottom:2px; }
+  .rev-item { border:1px solid var(--line); border-left-width: 4px; border-radius: 10px; padding: 13px 15px; margin-top: 12px; background: var(--paper-2); }
+  .rev-item.ok { border-left-color: var(--teal); }
+  .rev-item.no { border-left-color: var(--clay); }
+  .rev-itop { display:flex; justify-content:space-between; align-items:baseline; gap:10px; font-family:'IBM Plex Mono',monospace; font-size:10px; letter-spacing:.14em; text-transform:uppercase; color: var(--muted); margin-bottom: 7px; }
+  .rev-itop .res.ok { color: var(--teal); }
+  .rev-itop .res.no { color: var(--clay); }
+  .rev-q { font-family:'Fraunces',serif; font-weight:600; font-size: 17px; line-height:1.3; }
+  .rev-line { font-size: 14.5px; margin-top: 7px; }
+  .rev-line .corr { color: var(--teal); font-weight:600; }
+  .rev-line .yours { color: var(--clay); font-weight:600; }
+  .rev-method { font-size: 13.5px; color:#4a4135; line-height:1.5; margin-top:8px; border-top:1px dashed rgba(0,0,0,.14); padding-top:8px; }
+  .rev-method b { font-family:'IBM Plex Mono',monospace; font-size:10px; letter-spacing:.12em; text-transform:uppercase; color:var(--ink); display:block; margin-bottom:3px; }
+
+  /* ---- back-to-site link ---- */
+  .site-link {
+    display:inline-flex; align-items:center; gap:7px;
+    margin-top: 20px;
+    font-family:'IBM Plex Mono', monospace;
+    font-size: 11px; letter-spacing:.12em; text-transform:uppercase;
+    color: var(--muted); text-decoration: none;
+    transition: color .15s;
+  }
+  .site-link:hover { color: var(--clay); }
+
+  .hidden { display: none !important; }
+  @keyframes rise { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
+  .stagger > * { animation: rise .5s ease both; }
+  .stagger > *:nth-child(1){animation-delay:.02s}
+  .stagger > *:nth-child(2){animation-delay:.08s}
+  .stagger > *:nth-child(3){animation-delay:.14s}
+  .stagger > *:nth-child(4){animation-delay:.20s}
+  .stagger > *:nth-child(5){animation-delay:.26s}
+  .stagger > *:nth-child(6){animation-delay:.32s}
+</style>
+</head>
+<body>
+
+<div class="stage">
+  <div class="card">
+
+    <!-- ============ HOME ============ -->
+    <section id="home" class="stagger">
+      <span class="eyebrow">Daily Drill</span>
+      <h1>Mental&nbsp;Math<br><em>for the case&nbsp;room</em></h1>
+      <p class="lede">Ten timed problems a day. Real consulting arithmetic — percentages, growth, margins, break-even, market sizing — with the shortcut shown after every answer.</p>
+
+      <div class="stats" id="statStrip">
+        <div class="stat flame"><div class="v" id="sStreak">–</div><div class="k">Day streak</div></div>
+        <div class="stat"><div class="v" id="sBest">–</div><div class="k">Best run</div></div>
+        <div class="stat"><div class="v" id="sAcc">–</div><div class="k">Accuracy</div></div>
+        <div class="stat"><div class="v" id="sSess">–</div><div class="k">Sessions</div></div>
+      </div>
+
+      <div class="label">Choose your level</div>
+      <div class="seg" id="seg">
+        <button data-l="warmup"><span class="t">Warm-up</span><span class="d">round numbers</span></button>
+        <button data-l="standard" aria-pressed="true"><span class="t">Standard</span><span class="d">the daily mix</span></button>
+        <button data-l="case"><span class="t">Case-ready</span><span class="d">multi-step</span></button>
+      </div>
+
+      <button class="btn btn-primary" id="startBtn">Begin today's drill →</button>
+      <button class="btn btn-ghost" id="reviewBtn" style="width:100%;margin-top:10px;">Review past drills →</button>
+      <p class="tip">Tip: don't reach for a calculator — the whole point is to estimate fast in your head. Aim to keep each answer under ~25 seconds.</p>
+      <a class="site-link" href="index.html#projects">← Back to rajashreeagrawal.github.io</a>
+    </section>
+
+    <!-- ============ DRILL ============ -->
+    <section id="drill" class="hidden">
+      <div class="drill-top">
+        <div class="dots" id="dots"></div>
+        <div>score <span id="liveScore">0</span></div>
+        <div class="timer" id="timer">0:00</div>
+      </div>
+
+      <div class="cat-tag" id="catTag">—</div>
+      <div class="question" id="qText">—</div>
+
+      <div id="inputArea">
+        <div class="answer-row">
+          <input id="ansInput" inputmode="decimal" autocomplete="off" placeholder="your answer" />
+          <button class="btn btn-primary" id="submitBtn" style="margin-top:0;">↵</button>
+        </div>
+        <button class="reveal-link" id="revealBtn">I don't know — show me how</button>
+      </div>
+
+      <div id="fbArea"></div>
+    </section>
+
+    <!-- ============ SUMMARY ============ -->
+    <section id="summary" class="hidden stagger">
+      <span class="eyebrow">Drill complete</span>
+      <div class="sum-score"><span id="finalScore">0</span><small>/10</small></div>
+      <div class="sum-grid">
+        <div class="sum-cell"><div class="v" id="finalTime">0:00</div><div class="k">Total time</div></div>
+        <div class="sum-cell"><div class="v" id="finalPace">0s</div><div class="k">Avg / question</div></div>
+      </div>
+      <div class="streak-note" id="streakNote">—</div>
+      <button class="btn btn-ghost" id="reviewTodayBtn" style="width:100%;margin-top:18px;">Review these answers →</button>
+      <div class="sum-actions" style="margin-top:12px;">
+        <button class="btn btn-ghost" id="homeBtn">Home</button>
+        <button class="btn btn-primary" id="againBtn" style="margin-top:0;">Go again →</button>
+      </div>
+      <p class="tip" id="paceTip"></p>
+    </section>
+
+    <!-- ============ HISTORY LIST ============ -->
+    <section id="history" class="hidden">
+      <div class="sec-head">
+        <button class="back-btn" id="histBack" aria-label="Back">←</button>
+        <span class="eyebrow">Your log</span>
+      </div>
+      <h1 style="font-size:clamp(28px,7vw,42px);margin:10px 0 0;">Past&nbsp;drills</h1>
+      <div id="histList"></div>
+    </section>
+
+    <!-- ============ REVIEW DETAIL ============ -->
+    <section id="detail" class="hidden">
+      <div class="sec-head">
+        <button class="back-btn" id="detailBack" aria-label="Back">←</button>
+        <span class="eyebrow">Review</span>
+      </div>
+      <h1 id="detailTitle" style="font-size:clamp(26px,6.5vw,36px);margin:10px 0 0;">Drill</h1>
+      <div class="rev-summary" id="detailSummary"></div>
+      <div id="detailItems"></div>
+    </section>
+
+  </div>
+</div>
+
+<script>
+(function () {
+  "use strict";
+
+  /* ---------------- storage (graceful fallback) ----------------
+     Prefers the artifact `window.storage` API when present, then the
+     browser's localStorage (so streaks/history persist on the live
+     site), and finally an in-memory copy as a last resort. */
+  function lsGet(k) {
+    try { return window.localStorage ? window.localStorage.getItem(k) : null; }
+    catch (e) { return null; }
+  }
+  function lsSet(k, v) {
+    try { if (window.localStorage) window.localStorage.setItem(k, v); } catch (e) {}
+  }
+
+  var KEY = "mentalmath:v1";
+  var mem = null;
+  async function loadStats() {
+    var def = { lastDate: null, streak: 0, longest: 0, sessions: 0, correct: 0, attempted: 0 };
+    try {
+      if (window.storage) {
+        var r = await window.storage.get(KEY);
+        if (r && r.value) return Object.assign(def, JSON.parse(r.value));
+      }
+    } catch (e) {}
+    var raw = lsGet(KEY);
+    if (raw) { try { return Object.assign(def, JSON.parse(raw)); } catch (e) {} }
+    return mem ? Object.assign(def, mem) : def;
+  }
+  async function saveStats(s) {
+    mem = s;
+    var json = JSON.stringify(s);
+    try { if (window.storage) await window.storage.set(KEY, json); } catch (e) {}
+    lsSet(KEY, json);
+  }
+  function dstr(d) {
+    return d.getFullYear() + "-" + String(d.getMonth()+1).padStart(2,"0") + "-" + String(d.getDate()).padStart(2,"0");
+  }
+
+  /* ---------------- session history (graceful fallback) ---------------- */
+  var HKEY = "mentalmath:history:v1";
+  var HCAP = 30;
+  var hmem = null;
+  async function loadHistory() {
+    try {
+      if (window.storage) {
+        var r = await window.storage.get(HKEY);
+        if (r && r.value) return JSON.parse(r.value);
+      }
+    } catch (e) {}
+    var raw = lsGet(HKEY);
+    if (raw) { try { return JSON.parse(raw); } catch (e) {} }
+    return hmem || [];
+  }
+  async function saveHistory(arr) {
+    hmem = arr;
+    var json = JSON.stringify(arr);
+    try { if (window.storage) await window.storage.set(HKEY, json); } catch (e) {}
+    lsSet(HKEY, json);
+  }
+
+  /* ---------------- helpers ---------------- */
+  var R = function (a, b) { return Math.floor(Math.random() * (b - a + 1)) + a; };
+  var pick = function (a) { return a[Math.floor(Math.random() * a.length)]; };
+  var num = function (n) { return (Math.round(n * 100) / 100).toLocaleString("en-US"); };
+  var money = function (n) { return "$" + Math.round(n).toLocaleString("en-US"); };
+
+  /* ---------------- generators ----------------
+     each returns { cat, q, a, technique, abstol, tol }  */
+
+  function gPercentOf(level) {
+    var pcts = level === "warmup" ? [10, 20, 25, 50] : [5,15,30,35,40,45,60,75];
+    var pct = pick(pcts);
+    var base = R(level === "warmup" ? 2 : 4, level === "warmup" ? 9 : 24) * 20;
+    var a = pct / 100 * base;
+    return {
+      cat: "Percent of a number",
+      q: "What is " + pct + "% of " + num(base) + "?",
+      a: a, abstol: 0.05,
+      technique: "Anchor on 10% and 1%. 10% of " + num(base) + " = " + num(base/10) +
+                 ", and 1% = " + num(base/100) + ". Stack those to reach " + pct + "% = " + num(a) +
+                 ".  (Also handy: " + pct + "% of " + num(base) + " = " + num(base) + "% of " + pct + " when that flips easier.)"
+    };
+  }
+
+  function gPercentChange(level) {
+    var chg = pick(level === "warmup" ? [10,20,25,50,-10,-20] : [15,30,40,60,75,-15,-25,-30]);
+    var old = R(2, 12) * 100;
+    var nw = old + old * chg / 100;
+    var metric = pick(["Revenue","Sales","Headcount","Unit volume","Operating profit","Market size"]);
+    return {
+      cat: "Percentage change",
+      q: metric + " moved from " + num(old) + " to " + num(nw) + ". What's the % change?",
+      a: chg, abstol: 0.05,
+      technique: "% change = change ÷ original. Change = " + num(nw - old) + ", divided by the original " +
+                 num(old) + " = " + chg + "%." + (chg < 0 ? " (A decrease — note the minus.)" : "")
+    };
+  }
+
+  function gFraction(level) {
+    var fr = level === "warmup"
+      ? [[1,2,50],[1,4,25],[3,4,75],[1,5,20],[2,5,40],[1,10,10],[3,5,60],[1,20,5]]
+      : [[1,8,12.5],[3,8,37.5],[5,8,62.5],[7,8,87.5],[1,3,33.33],[2,3,66.67],[1,6,16.67],[5,6,83.33],[1,16,6.25],[3,16,18.75],[1,12,8.33],[7,12,58.33]];
+    var f = pick(fr), n = f[0], d = f[1], a = f[2];
+    return {
+      cat: "Fraction → percent",
+      q: "Express " + n + "/" + d + " as a percentage.",
+      a: a, abstol: 0.6,
+      technique: "1/" + d + " = " + num(100/d) + "%, so " + n + "/" + d + " = " + n + " × " + num(100/d) +
+                 "% ≈ " + a + "%. The eighths (12.5, 37.5, 62.5, 87.5) and thirds (33.3, 66.7) are worth memorising cold."
+    };
+  }
+
+  function gMultiply(level) {
+    var t = pick(level === "warmup" ? ["x25","x5","x11"] : ["x25","x50","x9","x11","x15"]);
+    var x, ans, tech;
+    if (t === "x25") { x = R(3, 24) * 4; ans = x * 25; tech = "×25 = ÷4, then ×100. " + num(x) + " ÷ 4 = " + num(x/4) + " → " + num(ans) + "."; }
+    else if (t === "x50") { x = R(3, 24) * 2; ans = x * 50; tech = "×50 = ÷2, then ×100. Half of " + num(x) + " is " + num(x/2) + " → " + num(ans) + "."; }
+    else if (t === "x5") { x = R(3, 49) * 2; ans = x * 5; tech = "×5 = ÷2, then ×10. Half of " + num(x) + " is " + num(x/2) + ", ×10 = " + num(ans) + "."; }
+    else if (t === "x9") { x = R(11, 89); ans = x * 9; tech = "×9 = ×10 − the number. " + num(x) + "0 − " + num(x) + " = " + num(ans) + "."; }
+    else if (t === "x11") { x = R(11, 89); ans = x * 11; tech = "×11 = ×10 + the number. " + num(x) + "0 + " + num(x) + " = " + num(ans) + "."; }
+    else { x = R(4, 40) * 2; ans = x * 15; tech = "×15 = ×10 + half again. " + num(x) + "0 + " + num(x*5) + " = " + num(ans) + "."; }
+    return { cat: "Fast multiplication", q: num(x) + " × " + t.slice(1), a: ans, abstol: 0.05, technique: tech };
+  }
+
+  function gReverse(level) {
+    var pct = pick([5,10,15,20,25,40,50]);
+    var whole = R(2, 12) * 100;
+    var val = whole * pct / 100;
+    return {
+      cat: "Reverse percentage",
+      q: num(val) + " is " + pct + "% of what number?",
+      a: whole, abstol: 0.05,
+      technique: "Divide by the percent. If " + pct + "% = " + num(val) + ", then 1% = " + num(val/pct) +
+                 ", and 100% = " + num(whole) + ".  (Same as " + num(val) + " ÷ " + (pct/100) + ".)"
+    };
+  }
+
+  function gMargin() {
+    var m = pick([20,25,30,40,50,60]);
+    var price = R(2, 12) * 20;
+    var cost = price * (1 - m / 100);
+    return {
+      cat: "Gross margin",
+      q: "Sells for " + money(price) + ", costs " + money(cost) + " to make. Gross margin %?",
+      a: m, abstol: 0.05,
+      technique: "Margin = (price − cost) ÷ price. (" + num(price) + " − " + num(cost) + ") = " + num(price-cost) +
+                 ", ÷ " + num(price) + " = " + m + "%. Don't confuse with markup, which divides by cost instead."
+    };
+  }
+
+  function gBreakeven() {
+    var contrib = pick([4,5,8,10,12,15,20,25]);
+    var price = contrib + pick([6,8,10,12,15]);
+    var vc = price - contrib;
+    var units = R(3, 30) * 100;
+    var FC = contrib * units;
+    return {
+      cat: "Break-even units",
+      q: "Fixed costs " + money(FC) + ", price " + money(price) + "/unit, variable cost " + money(vc) + "/unit. Break-even units?",
+      a: units, abstol: 0.5,
+      technique: "Break-even = fixed costs ÷ contribution per unit. Contribution = " + num(price) + " − " + num(vc) +
+                 " = " + num(contrib) + ". So " + money(FC) + " ÷ " + num(contrib) + " = " + num(units) + " units."
+    };
+  }
+
+  function gRuleOf72() {
+    var rate = pick([4,6,8,9,12,18]);
+    var years = 72 / rate;
+    return {
+      cat: "Rule of 72",
+      q: "At " + rate + "% annual growth, roughly how many years to double? (Rule of 72)",
+      a: years, abstol: 0.4,
+      technique: "Years to double ≈ 72 ÷ growth rate. 72 ÷ " + rate + " = " + num(years) +
+                 " years. Great for napkin compounding — works in reverse too (72 ÷ years = the rate you need)."
+    };
+  }
+
+  function gCompound() {
+    var start = R(1, 9) * 50;
+    var rate = pick([5,8,10,12,15,20]);
+    var years = pick([2,3]);
+    var end = start * Math.pow(1 + rate/100, years);
+    return {
+      cat: "Compound growth (estimate)",
+      q: money(start) + "M revenue grows " + rate + "%/yr for " + years + " years. Approx revenue in $M? (just the number)",
+      a: end, tol: 0.04,
+      technique: "Compounding: " + num(start) + " × (1 + " + rate + "%)^" + years + ". Quick approx — add ~" +
+                 (rate*years) + "% (rate × years) then nudge up a touch for compounding → ≈ " + num(end) + "M. (Exact: " + num(end) + "M.)"
+    };
+  }
+
+  function gMarketSize() {
+    if (Math.random() < 0.5) {
+      var pop = pick([0.5,1,2,5]), pen = pick([30,40,50,60]), freq = pick([1,2,3]);
+      var a = pop * pen/100 * freq * 365; // millions of cups/yr
+      return {
+        cat: "Market sizing (estimate)",
+        q: "Annual coffee cups sold in a city of " + pop + "M people, if " + pen + "% drink " + freq +
+           " cup(s)/day? (answer in millions of cups)",
+        a: a, tol: 0.05,
+        technique: "Population → users → daily volume → annualise. " + pop + "M × " + pen + "% = " +
+                   num(pop*pen/100) + "M drinkers × " + freq + "/day = " + num(pop*pen/100*freq) +
+                   "M/day × 365 ≈ " + num(a) + "M cups/yr."
+      };
+    } else {
+      var house = pick([20,40,80,125]), own = pick([40,60,80]), life = pick([4,5,8,10]);
+      var b = house * own/100 / life; // millions of units/yr
+      return {
+        cat: "Market sizing (estimate)",
+        q: "Annual replacement sales of an appliance: " + house + "M households, " + own + "% own one, replaced every " +
+           life + " yrs? (answer in millions of units)",
+        a: b, tol: 0.05,
+        technique: "Installed base ÷ replacement cycle. " + house + "M × " + own + "% = " + num(house*own/100) +
+                   "M units installed; ÷ " + life + " yrs ≈ " + num(b) + "M units/yr."
+      };
+    }
+  }
+
+  var POOLS = {
+    warmup:  [gPercentOf, gPercentChange, gFraction, gMultiply],
+    standard:[gPercentOf, gPercentChange, gFraction, gMultiply, gReverse, gMargin, gRuleOf72],
+    case:    [gPercentOf, gPercentChange, gFraction, gMultiply, gReverse, gMargin, gRuleOf72, gBreakeven, gCompound, gMarketSize]
+  };
+
+  function buildSession(level) {
+    var pool = POOLS[level], out = [], last = null;
+    for (var i = 0; i < 10; i++) {
+      var g, tries = 0;
+      do { g = pick(pool); tries++; } while (g === last && tries < 5);
+      last = g;
+      out.push(g(level));
+    }
+    return out;
+  }
+
+  /* ---------------- answer checking ---------------- */
+  function parse(s) {
+    if (s == null) return NaN;
+    s = String(s).replace(/[\s,$%]/g, "").replace(/m$/i, "");
+    return parseFloat(s);
+  }
+  function isRight(q, val) {
+    if (isNaN(val)) return false;
+    var d = Math.abs(val - q.a);
+    if (q.abstol != null && d <= q.abstol) return true;
+    if (q.tol != null && d <= q.tol * Math.abs(q.a)) return true;
+    return false;
+  }
+
+  /* ---------------- DOM ---------------- */
+  var $ = function (id) { return document.getElementById(id); };
+  var homeEl = $("home"), drillEl = $("drill"), sumEl = $("summary"), histEl = $("history"), detailEl = $("detail");
+  var level = "standard";
+  var session = [], idx = 0, score = 0, t0 = 0, tHandle = null, qStart = 0, answered = false;
+  var results = [];
+  var lastRecord = null, detailFrom = "home";
+
+  /* difficulty segmented control */
+  Array.prototype.forEach.call($("seg").children, function (b) {
+    b.addEventListener("click", function () {
+      level = b.getAttribute("data-l");
+      Array.prototype.forEach.call($("seg").children, function (x) { x.setAttribute("aria-pressed", x === b ? "true" : "false"); });
+    });
+  });
+
+  function fmtTime(ms) {
+    var s = Math.floor(ms / 1000);
+    return Math.floor(s / 60) + ":" + String(s % 60).padStart(2, "0");
+  }
+  function tick() { $("timer").textContent = fmtTime(Date.now() - t0); }
+
+  function show(el) { [homeEl, drillEl, sumEl, histEl, detailEl].forEach(function (x) { x.classList.add("hidden"); }); el.classList.remove("hidden"); window.scrollTo(0, 0); }
+
+  function renderDots() {
+    var html = "";
+    for (var i = 0; i < session.length; i++) {
+      var c = "dot";
+      if (i < idx && results[i]) c += results[i].right ? " done" : " wrong";
+      else if (i === idx) c += " cur";
+      html += '<span class="' + c + '"></span>';
+    }
+    $("dots").innerHTML = html;
+  }
+
+  function loadQuestion() {
+    answered = false;
+    var q = session[idx];
+    $("catTag").textContent = q.cat;
+    $("qText").textContent = q.q;
+    $("inputArea").classList.remove("hidden");
+    $("fbArea").innerHTML = "";
+    var inp = $("ansInput");
+    inp.value = ""; inp.disabled = false;
+    $("submitBtn").disabled = false;
+    $("liveScore").textContent = score;
+    renderDots();
+    qStart = Date.now();
+    setTimeout(function () { inp.focus(); }, 30);
+  }
+
+  function feedback(right, q, userVal, gaveUp) {
+    var div = document.createElement("div");
+    div.className = "feedback " + (right ? "right" : "wrong");
+    var head = right ? "✓ &nbsp;Correct" : (gaveUp ? "Here's the method" : "✗ &nbsp;Not quite");
+    var youLine = (!right && !gaveUp && !isNaN(userVal))
+      ? '<span class="you">you said ' + num(userVal) + '</span>' : "";
+    div.innerHTML =
+      '<div class="fb-head"><span>' + head + '</span>' + youLine + '</div>' +
+      '<div class="fb-ans">' + num(q.a) + (q.tol ? ' <span class="you">(±)</span>' : '') + '</div>' +
+      '<div class="fb-tech"><b>The shortcut</b>' + q.technique + '</div>';
+    $("fbArea").appendChild(div);
+
+    var next = document.createElement("button");
+    next.className = "btn btn-primary";
+    next.textContent = (idx === session.length - 1) ? "See results →" : "Next question →";
+    next.addEventListener("click", advance);
+    $("fbArea").appendChild(next);
+    setTimeout(function () { next.focus(); }, 30);
+  }
+
+  function submit(gaveUp) {
+    if (answered) return;
+    answered = true;
+    var q = session[idx];
+    var val = gaveUp ? NaN : parse($("ansInput").value);
+    var right = gaveUp ? false : isRight(q, val);
+    if (right) score++;
+    results[idx] = { right: right, t: Date.now() - qStart, val: val, gaveUp: gaveUp };
+    $("ansInput").disabled = true;
+    $("submitBtn").disabled = true;
+    $("inputArea").classList.add("hidden");
+    $("liveScore").textContent = score;
+    renderDots();
+    feedback(right, q, val, gaveUp);
+  }
+
+  function advance() {
+    idx++;
+    if (idx >= session.length) finish();
+    else loadQuestion();
+  }
+
+  async function finish() {
+    clearInterval(tHandle);
+    var total = Date.now() - t0;
+    $("finalScore").textContent = score;
+    $("finalTime").textContent = fmtTime(total);
+    var pace = Math.round(total / session.length / 1000);
+    $("finalPace").textContent = pace + "s";
+
+    var msg, tip;
+    if (pace <= 18) tip = "That's a sharp pace — comfortably inside case-interview speed. Push to Case-ready if you haven't.";
+    else if (pace <= 30) tip = "Solid working pace. Trim a few seconds by leaning harder on the 10%/1% anchors.";
+    else tip = "Plenty of room to speed up — that comes purely from reps. The shortcuts get automatic fast.";
+    $("paceTip").textContent = tip;
+
+    // streak + persistence
+    var s = await loadStats();
+    var today = dstr(new Date());
+    var yest = dstr(new Date(Date.now() - 864e5));
+    if (s.lastDate === today) { /* already counted today */ }
+    else if (s.lastDate === yest) s.streak += 1;
+    else s.streak = 1;
+    s.lastDate = today;
+    s.longest = Math.max(s.longest, s.streak);
+    s.sessions += 1;
+    s.correct += score;
+    s.attempted += session.length;
+    await saveStats(s);
+
+    if (s.streak === 1) msg = 'Streak started — <b>day 1</b>. Come back tomorrow to keep it alive.';
+    else msg = 'Daily streak: <b>' + s.streak + ' days</b> running. Longest ever: ' + s.longest + '.';
+    $("streakNote").innerHTML = msg;
+
+    // save the full session so it can be reviewed later
+    lastRecord = {
+      ts: Date.now(), date: today, level: level, score: score, total: total,
+      items: session.map(function (q, i) {
+        var r = results[i] || {};
+        return {
+          q: q.q, cat: q.cat, a: q.a, tol: q.tol || null,
+          user: (r.val == null || isNaN(r.val)) ? null : r.val,
+          gaveUp: !!r.gaveUp, right: !!r.right, t: r.t || 0, tech: q.technique
+        };
+      })
+    };
+    var hist = await loadHistory();
+    hist.unshift(lastRecord);
+    if (hist.length > HCAP) hist = hist.slice(0, HCAP);
+    await saveHistory(hist);
+
+    paintStats(s);
+    show(sumEl);
+  }
+
+  function paintStats(s) {
+    $("sStreak").innerHTML = s.streak + (s.streak ? '<small>d</small>' : '');
+    $("sBest").innerHTML = s.longest + (s.longest ? '<small>d</small>' : '');
+    $("sAcc").innerHTML = s.attempted ? Math.round(100 * s.correct / s.attempted) + '<small>%</small>' : '–';
+    $("sSess").textContent = s.sessions || 0;
+  }
+
+  function startDrill() {
+    session = buildSession(level);
+    idx = 0; score = 0; results = [];
+    t0 = Date.now();
+    clearInterval(tHandle);
+    tHandle = setInterval(tick, 500);
+    tick();
+    show(drillEl);
+    loadQuestion();
+  }
+
+  /* ---------------- review screens ---------------- */
+  function whenLabel(rec) {
+    var today = dstr(new Date());
+    var yest = dstr(new Date(Date.now() - 864e5));
+    var base = rec.date === today ? "Today" : (rec.date === yest ? "Yesterday"
+      : new Date(rec.ts).toLocaleDateString("en-US", { month: "short", day: "numeric" }));
+    var time = new Date(rec.ts).toLocaleTimeString("en-US", { hour: "numeric", minute: "2-digit" });
+    return base + " · " + time;
+  }
+  function levelName(l) { return l === "warmup" ? "Warm-up" : l === "case" ? "Case-ready" : "Standard"; }
+
+  async function renderHistory() {
+    var hist = await loadHistory();
+    var box = $("histList");
+    if (!hist.length) {
+      box.innerHTML = '<div class="empty">No drills saved yet.<br>Finish a drill and it&rsquo;ll appear here for review.</div>';
+      return;
+    }
+    box.innerHTML = '<div class="hist-list">' + hist.map(function (rec, i) {
+      var avg = Math.round(rec.total / rec.items.length / 1000);
+      return '<button class="hist-row" data-i="' + i + '">' +
+        '<div class="hist-score">' + rec.score + '<small>/10</small></div>' +
+        '<div class="hist-meta"><div class="hist-when">' + whenLabel(rec) + '</div>' +
+        '<div class="hist-sub"><span class="lvl-pill">' + levelName(rec.level) + '</span>' + avg + 's / q</div></div>' +
+        '<div class="hist-arrow">→</div></button>';
+    }).join("") + '</div>';
+    Array.prototype.forEach.call(box.querySelectorAll(".hist-row"), function (row) {
+      row.addEventListener("click", function () {
+        openDetail(hist[parseInt(row.getAttribute("data-i"), 10)], true);
+      });
+    });
+  }
+
+  function openDetail(rec, fromHistory) {
+    if (!rec) return;
+    detailFrom = fromHistory ? "history" : "summary";
+    $("detailTitle").textContent = whenLabel(rec);
+    var avg = Math.round(rec.total / rec.items.length / 1000);
+    $("detailSummary").innerHTML =
+      '<div><b>' + rec.score + '/10</b>score</div>' +
+      '<div><b>' + fmtTime(rec.total) + '</b>time</div>' +
+      '<div><b>' + avg + 's</b>avg / q</div>' +
+      '<div><b>' + levelName(rec.level) + '</b>level</div>';
+    $("detailItems").innerHTML = rec.items.map(function (it, i) {
+      var cls = it.right ? "ok" : "no";
+      var resTxt = it.right ? "Correct" : (it.gaveUp ? "Skipped" : "Missed");
+      var line;
+      if (it.right) {
+        line = '<div class="rev-line">Answer: <span class="corr">' + num(it.a) + '</span></div>';
+      } else {
+        var yours = it.gaveUp ? "skipped" : (it.user == null ? "&mdash;" : num(it.user));
+        line = '<div class="rev-line">Answer: <span class="corr">' + num(it.a) + '</span> &nbsp;·&nbsp; You: <span class="yours">' + yours + '</span></div>';
+      }
+      return '<div class="rev-item ' + cls + '">' +
+        '<div class="rev-itop"><span>' + (i + 1) + '. ' + it.cat + '</span><span class="res ' + cls + '">' + resTxt + '</span></div>' +
+        '<div class="rev-q">' + it.q + '</div>' + line +
+        '<div class="rev-method"><b>Shortcut</b>' + it.tech + '</div>' +
+        '</div>';
+    }).join("");
+    show(detailEl);
+  }
+
+  /* events */
+  $("startBtn").addEventListener("click", startDrill);
+  $("againBtn").addEventListener("click", startDrill);
+  $("homeBtn").addEventListener("click", function () { show(homeEl); });
+  $("submitBtn").addEventListener("click", function () { submit(false); });
+  $("revealBtn").addEventListener("click", function () { submit(true); });
+  $("ansInput").addEventListener("keydown", function (e) { if (e.key === "Enter") submit(false); });
+  $("reviewBtn").addEventListener("click", function () { renderHistory(); show(histEl); });
+  $("reviewTodayBtn").addEventListener("click", function () { openDetail(lastRecord, false); });
+  $("histBack").addEventListener("click", function () { show(homeEl); });
+  $("detailBack").addEventListener("click", function () {
+    if (detailFrom === "summary") show(sumEl);
+    else { renderHistory(); show(histEl); }
+  });
+
+  /* init */
+  (async function () {
+    var s = await loadStats();
+    paintStats(s);
+  })();
+})();
+</script>
+</body>
+</html>
