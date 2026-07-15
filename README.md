@@ -1,4 +1,4 @@
-# rajashree.agrawal
+# rajashree.agrawal.github.io
 
 Personal portfolio site for Rajashree Rakesh Agrawal — a single, self-contained
 `index.html` (inline CSS/JS, images embedded as data URIs, fonts from Google
