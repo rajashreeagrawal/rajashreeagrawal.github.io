@@ -4,6 +4,15 @@ Personal portfolio site for Rajashree Rakesh Agrawal — a single, self-containe
 `index.html` (inline CSS/JS, images embedded as data URIs, fonts from Google
 Fonts CDN).
 
+The Quick Mental Maths project is a standalone `mental-maths.html` page linked
+from the portfolio's Projects section.
+
+Word Finder (Bookends) is available at `word-finder.html`, adapted from the supplied
+JSX game. Its styles, game logic, and original word list are in `assets/word-finder*`.
+The bundled list works offline; additional words are checked using the Free
+Dictionary API and remembered for the current session. Both games link back to
+the portfolio.
+
 ## Hosting (GitHub Pages)
 
 The site is deployed with GitHub Pages. Two ways to turn it on:

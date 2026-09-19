@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Word Finder · Rajashree Rakesh Agrawal</title>
+  <meta name="description" content="Two letters, many possibilities. Find words with matching first and last letters in Bookends, a word game by Rajashree Rakesh Agrawal.">
+  <meta name="theme-color" content="#10243F">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/word-finder.css">
+  <link rel="stylesheet" href="assets/typography.css">
+  <script src="assets/word-finder-data.js" defer></script>
+  <script src="assets/word-finder.js" defer></script>
+</head>
+<body class="word-finder">
+  <nav class="site-nav" aria-label="Portfolio navigation">
+    <a class="back-link" href="index.html#projects"><span aria-hidden="true">←</span> Back to Rajashree’s portfolio</a>
+    <span class="nav-label">WORD FINDER</span>
+  </nav>
+  <main>
+    <article class="game" aria-labelledby="game-title">
+      <header>
+        <p class="eyebrow">FIRST LETTER → LAST LETTER</p>
+        <h1 id="game-title">Bookends<span>.</span></h1>
+        <p class="intro">Find words that start with the left letter and end with the right one.</p>
+      </header>
+      <div class="tiles" aria-live="polite" aria-atomic="true">
+        <div class="tile"><span class="tile-label">Starts with</span><strong id="first-letter">—</strong></div>
+        <span class="bridge" aria-hidden="true">···</span>
+        <div class="tile tile-end"><span class="tile-label">Ends with</span><strong id="last-letter">—</strong></div>
+      </div>
+      <form id="guess-form">
+        <label for="guess">Your word</label>
+        <div class="input-row">
+          <input id="guess" name="word" type="text" placeholder="Type a word" autocomplete="off" autocapitalize="none" spellcheck="false" maxlength="60" aria-describedby="word-help feedback" required>
+          <button id="submit-word" type="submit">Guess <span aria-hidden="true">→</span></button>
+        </div>
+        <p class="help" id="word-help">Use at least 3 letters. Press Enter to submit.</p>
+      </form>
+      <p id="feedback" class="feedback" role="status" aria-live="polite" aria-atomic="true"></p>
+      <section id="found-section" class="found-section" aria-labelledby="found-title" hidden>
+        <h2 id="found-title">Found this round</h2>
+        <ul id="found-words" class="word-chips"></ul>
+      </section>
+      <section id="answers-section" class="answers" aria-labelledby="answers-title" hidden>
+        <h2 id="answers-title">Some words to try</h2>
+        <ol id="answer-words"></ol>
+        <p class="help">A few possibilities from the game dictionary.</p>
+      </section>
+      <div class="controls">
+        <button id="show-answers" class="secondary" type="button" aria-expanded="false" aria-controls="answers-section">Show answers</button>
+        <button id="new-round" type="button">New letters <span aria-hidden="true">→</span></button>
+      </div>
+      <dl class="stats" aria-label="Session totals">
+        <div><dt>Words found</dt><dd id="score">0</dd></div>
+        <div><dt>Rounds played</dt><dd id="rounds">1</dd></div>
+        <div><dt>Words added</dt><dd id="added-count">0</dd></div>
+      </dl>
+      <p class="session-note">New words are checked online and remembered for this session. The built-in word list works offline.</p>
+      <noscript><p>Please enable JavaScript to play Word Finder.</p></noscript>
+    </article>
+    <p class="more-games">Prefer numbers? <a href="mental-maths.html">Try Quick Mental Maths →</a></p>
+  </main>
+</body>
+</html>

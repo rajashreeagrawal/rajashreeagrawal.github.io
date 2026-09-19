@@ -1,0 +1,108 @@
+/* Shared reading sizes. Rem units respect the reader's default font size. */
+:root {
+  --text-body: 1rem;
+  --text-card-title: 1.125rem;
+  --text-label: .875rem;
+}
+body { font-size: var(--text-body); }
+
+/* Portfolio: miniature project previews retain their own scale. */
+.portfolio .hero .sub,
+.portfolio .about-grid .thread,
+.portfolio .xp p,
+.portfolio .proj p,
+.portfolio .skill span,
+.portfolio .edu p,
+.portfolio footer .email { font-size: var(--text-body); }
+
+.portfolio .xp h3,
+.portfolio .xp .co,
+.portfolio .proj h3,
+.portfolio .skill p,
+.portfolio .edu h3 { font-size: var(--text-card-title); line-height: 1.45; }
+
+.portfolio .nav-links a,
+.portfolio .eyebrow,
+.portfolio .btn,
+.portfolio .contact-link,
+.portfolio .about-photo figcaption,
+.portfolio .xp-note,
+.portfolio .tl-when .mos,
+.portfolio .xp .where,
+.portfolio .xp .tag-now,
+.portfolio .badges span,
+.portfolio .theme-chips span,
+.portfolio .ask-me,
+.portfolio .proj .go,
+.portfolio .edu-label,
+.portfolio .edu .when,
+.portfolio .tile .cap,
+.portfolio .tiny { font-size: var(--text-label); line-height: 1.5; }
+.portfolio .xp .tag-now { letter-spacing: .04em; }
+
+/* Mental Maths: readable controls, feedback, history, and review text. */
+.mental-maths .lede,
+.mental-maths .seg button .t,
+.mental-maths .fb-ans .you,
+.mental-maths .fb-tech,
+.mental-maths .streak-note,
+.mental-maths .tip,
+.mental-maths .empty,
+.mental-maths .rev-line,
+.mental-maths .rev-method { font-size: var(--text-body); line-height: 1.6; }
+
+.mental-maths .site-return,
+.mental-maths .eyebrow,
+.mental-maths .label,
+.mental-maths .stat .k,
+.mental-maths .stat .v small,
+.mental-maths .seg button .d,
+.mental-maths .btn,
+.mental-maths .drill-top,
+.mental-maths .drill-exit,
+.mental-maths .cat-tag,
+.mental-maths .reveal-link,
+.mental-maths .fb-head,
+.mental-maths .fb-tech b,
+.mental-maths .sum-cell .k,
+.mental-maths .hist-score small,
+.mental-maths .hist-sub,
+.mental-maths .lvl-pill,
+.mental-maths .rev-summary,
+.mental-maths .rev-itop,
+.mental-maths .rev-method b { font-size: var(--text-label); line-height: 1.5; letter-spacing: .04em; }
+
+.mental-maths .hist-when,
+.mental-maths .rev-q,
+.mental-maths .rev-summary b { font-size: var(--text-card-title); line-height: 1.45; }
+.mental-maths .answer-row input { min-width: 0; }
+.mental-maths .drill-top,
+.mental-maths .fb-head,
+.mental-maths .rev-itop { flex-wrap: wrap; gap: 10px; }
+.mental-maths .stat .k { overflow-wrap: anywhere; }
+.mental-maths .site-return { max-width: 100%; }
+
+/* Word Finder: align supporting text with the portfolio and Mental Maths. */
+.word-finder .intro,
+.word-finder input,
+.word-finder .feedback,
+.word-finder .word-chips li { font-size: var(--text-body); }
+.word-finder h2 { font-size: var(--text-card-title); line-height: 1.45; }
+.word-finder .back-link,
+.word-finder .nav-label,
+.word-finder .eyebrow,
+.word-finder .tile-label,
+.word-finder label,
+.word-finder button,
+.word-finder .input-row button,
+.word-finder .help,
+.word-finder .stats dt,
+.word-finder .session-note,
+.word-finder .more-games { font-size: var(--text-label); line-height: 1.5; }
+
+@media (max-width: 380px) {
+  .mental-maths .answer-row { flex-wrap: wrap; }
+  .mental-maths .answer-row input { width: 100%; flex-basis: 100%; }
+  .mental-maths .answer-row .btn { width: 100%; min-height: 44px; }
+  .mental-maths .seg { grid-template-columns: 1fr; }
+}
