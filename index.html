@@ -234,6 +234,16 @@ header.hero{padding:76px 0 68px;text-align:center;border-top:none}
 footer{scroll-margin-top:72px;padding:60px 0 40px;text-align:center;border-top:1px solid var(--line)}
 footer h2{margin-bottom:10px}
 footer p{color:var(--ink-soft);max-width:52ch;margin:0 auto 26px}
+.contact-layout{display:grid;grid-template-columns:220px minmax(0,1fr);align-items:center;gap:48px;max-width:850px;margin:0 auto;text-align:left}
+.contact-qr{margin:0;padding:16px;background:#fff;border:1px solid var(--line);border-radius:var(--radius);box-shadow:0 8px 22px rgba(16,36,63,.05)}
+.contact-qr img{display:block;width:100%;height:auto}
+.contact-copy p{margin:0 0 24px}
+.contact-copy .hero-contacts{justify-content:flex-start}
+@media(max-width:640px){
+  .contact-layout{grid-template-columns:1fr;justify-items:center;gap:28px;text-align:center}
+  .contact-qr{width:220px;max-width:100%}
+  .contact-copy .hero-contacts{justify-content:center}
+}
 footer .email{font-size:1.05rem;font-weight:600;color:var(--navy);text-decoration:none;border-bottom:2px solid var(--accent)}
 footer .email:hover{color:var(--accent)}
 .foot-links{display:flex;gap:16px;justify-content:center;flex-wrap:wrap;margin-top:30px}
@@ -596,6 +606,11 @@ footer .email:hover{color:var(--accent)}
 <!-- ================= CONTACT ================= -->
 <footer id="contact">
   <div class="wrap">
+    <div class="contact-layout">
+      <figure class="contact-qr reveal">
+        <img src="assets/contact-qr.png" width="614" height="615" alt="Rajashree’s QR code" loading="lazy" decoding="async">
+      </figure>
+      <div class="contact-copy">
     <h2 class="reveal">Say Hello!</h2>
     <p class="reveal">Whether it is business, a trail recommendation, or the best hot chocolate in any given city, let us connect on LinkedIn.</p>
     <div class="hero-contacts reveal" aria-label="Contact Rajashree">
@@ -603,6 +618,8 @@ footer .email:hover{color:var(--accent)}
         <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M6.5 8.25H3.25V21H6.5V8.25ZM4.88 3A1.88 1.88 0 1 0 4.88 6.75 1.88 1.88 0 0 0 4.88 3ZM21 13.7C21 9.86 18.95 8.07 16.22 8.07c-2.2 0-3.19 1.21-3.74 2.06V8.25H9.23V21h3.25v-6.32c0-1.67.32-3.29 2.39-3.29 2.04 0 2.06 1.91 2.06 3.4V21H21v-7.3Z"/></svg>
         <span>LinkedIn</span>
       </a>
+    </div>
+      </div>
     </div>
     <div class="tiny">© 2026 Rajashree Rakesh Agrawal · Made with curiosity (and probably hot chocolate)</div>
   </div>
